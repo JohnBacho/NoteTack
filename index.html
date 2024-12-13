@@ -10,10 +10,29 @@
       name="description"
       content="NoteTack is a simple lightweight note taking web application"
     />
+    <meta
+      name="keywords"
+      content="Note taking app, Stickynotes, virtualnotes, notes, webnotes"
+    />
+    <meta property="og:title" content="NoteTack - Your Digital Sticky Notes" />
+    <meta
+      property="og:description"
+      content="Create, organize, and keep your thoughts in one place with NoteTack. Your virtual sticky note hub."
+    />
+    <meta
+      property="og:image"
+      content="https://johnbacho.github.io/NoteTack/images/icons8-sticky-notes-64.png"
+    />
+    <meta property="og:url" content="https://johnbacho.github.io/NoteTack/" />
+    <meta property="og:type" content="website" />
+
     <title>NoteTack</title>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" type="image/png" href="images/icons8-sticky-notes-64.png" />
-
+    <link
+      rel="icon"
+      type="image/png"
+      href="images/icons8-sticky-notes-64.png"
+    />
   </head>
   <body id="notes-container">
     <header>
@@ -133,7 +152,6 @@
         document.querySelectorAll(".note").forEach((note) => note.remove());
         localStorage.removeItem("stickyNotes");
       });
-
     </script>
   </body>
 </html>
