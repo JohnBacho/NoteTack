@@ -29,7 +29,7 @@
       const addNoteBtn = document.getElementById("add-note-btn");
       const clearBtn = document.getElementById("Clear");
 
-      // Load saved notes from localStorage
+      // Loads saved notes from localStorage
       window.onload = () => {
         const notes = JSON.parse(localStorage.getItem("stickyNotes")) || [];
         notes.forEach((note) =>
