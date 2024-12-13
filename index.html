@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta
+      name="description"
+      content="Allows you to create StickyNotes and write text which is then stored in your local browser"
+    />
+    <title>NoteTack</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body id="notes-container">
+    <header>
+      <h1>NoteTack</h1>
+    </header>
+    <div>
+      <button id="add-note-btn">Add Sticky Note</button>
+      <button id="Clear">Remove All Notes</button>
+    </div>
+
+    <div id="notes-container"></div>
+
+    <script>
+      const notesContainer = document.getElementById("notes-container");
+      const addNoteBtn = document.getElementById("add-note-btn");
+      const clearBtn = document.getElementById("Clear");
+
+      // Load saved notes from localStorage
+      window.onload = () => {
+        const notes = JSON.parse(localStorage.getItem("stickyNotes")) || [];
+        notes.forEach((note) =>
+          createNoteElement(note.id, note.content, note.position, note.size)
+        );
+      };
+
+      // Save notes to localStorage
+      function saveNotes() {
+        const notes = [];
+        document.querySelectorAll(".note").forEach((note) => {
+          const id = note.dataset.id;
+          const content = note.querySelector("textarea").value;
+          const position = { top: note.style.top, left: note.style.left };
+          const size = { width: note.offsetWidth, height: note.offsetHeight };
+          notes.push({ id, content, position, size });
+        });
+        localStorage.setItem("stickyNotes", JSON.stringify(notes));
+      }
+
+      // Create a new sticky note element
+      function createNoteElement(
+        id = Date.now(),
+        content = "",
+        position = { top: "100px", left: "100px" }
+      ) {
+        const note = document.createElement("div");
+        note.classList.add("note");
+        note.dataset.id = id;
+        note.style.top = position.top;
+        note.style.left = position.left;
+
+        const dragArea = document.createElement("div");
+        dragArea.classList.add("drag-area");
+
+        const textarea = document.createElement("textarea");
+        textarea.value = content;
+        textarea.addEventListener("input", saveNotes);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "×";
+        deleteBtn.addEventListener("click", () => {
+          note.remove();
+          saveNotes();
+        });
+
+        note.appendChild(dragArea);
+        note.appendChild(textarea);
+        note.appendChild(deleteBtn);
+        notesContainer.appendChild(note);
+
+        enableDrag(note, dragArea);
+        textarea.focus();
+        saveNotes();
+      }
+
+      // Enable dragging for a note from the drag area
+      function enableDrag(note, dragArea) {
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        dragArea.addEventListener("mousedown", (e) => {
+          isDragging = true;
+          offsetX = e.clientX - note.offsetLeft;
+          offsetY = e.clientY - note.offsetTop;
+          dragArea.style.cursor = "grabbing";
+          document.body.style.userSelect = "none"; // Prevent text selection while dragging
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (!isDragging) return;
+          note.style.left = `${e.clientX - offsetX}px`;
+          note.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        document.addEventListener("mouseup", () => {
+          if (isDragging) {
+            isDragging = false;
+            dragArea.style.cursor = "grab";
+            document.body.style.userSelect = ""; // Re-enable text selection
+            saveNotes();
+          }
+        });
+      }
+
+      // Add a new note on button click
+      addNoteBtn.addEventListener("click", () => createNoteElement());
+
+      // Add a new note on double-click in the container
+      notesContainer.addEventListener("dblclick", (e) => {
+        const containerRect = notesContainer.getBoundingClientRect();
+        const x = e.clientX - containerRect.left;
+        const y = e.clientY - containerRect.top;
+        createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
+      });
+
+      // Clear all notes
+      clearBtn.addEventListener("click", () => {
+        document.querySelectorAll(".note").forEach((note) => note.remove());
+        localStorage.removeItem("stickyNotes");
+      });
+
+    </script>
+  </body>
+</html>
