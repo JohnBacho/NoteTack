@@ -43,12 +43,15 @@
       <button id="Clear">Remove All Notes</button>
     </div>
 
-    <div id="notes-container"></div>
+    <div id="notes-container">
+      <div id="text-in-notes-container" style="text-align: center; padding: 100px; color: rgb(190, 190, 190); font-size: x-large;">Double Click To Add Note</div>
+    </div>
 
     <script>
       const notesContainer = document.getElementById("notes-container");
       const addNoteBtn = document.getElementById("add-note-btn");
       const clearBtn = document.getElementById("Clear");
+      const textnotes = document.getElementById("text-in-notes-container");
 
       // Loads saved notes from localStorage
       window.onload = () => {
@@ -144,6 +147,7 @@
         const containerRect = notesContainer.getBoundingClientRect();
         const x = e.clientX - containerRect.left;
         const y = e.clientY - containerRect.top;
+        textnotes.textContent = '';
         createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
       });
 
