@@ -93,7 +93,7 @@ header {
 #notes-container {
     position: relative;
     width: 100%;
-    height: 15000px;
+    height: 1500px;
     overflow-x: hidden;
 }
 
@@ -121,4 +121,12 @@ header {
     font-size: x-large;
     font-family: sans-serif;
     opacity: 0.4;
+}
+
+footer{
+    text-align: center;
+    width: 100%;
+    padding: 25px;
+    background-color: #fbe313;
+    color: white;
 }

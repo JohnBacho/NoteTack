@@ -44,7 +44,17 @@
     </div>
 
     <div id="notes-container">
-      <div id="text-in-notes-container" style="text-align: center; padding: 100px; color: rgb(190, 190, 190); font-size: x-large;">Double Click To Add Note</div>
+      <div
+        id="text-in-notes-container"
+        style="
+          text-align: center;
+          padding: 100px;
+          color: rgb(190, 190, 190);
+          font-size: x-large;
+        "
+      >
+        Double Click To Add Note
+      </div>
     </div>
 
     <script>
@@ -144,17 +154,17 @@
 
       // Add a new note on double-click in the container
       notesContainer.addEventListener("dblclick", (e) => {
-  // Prevent creating a note if the double-click is on text or inside a note
-  if (e.target.tagName === "TEXTAREA" || e.target.closest(".note")) {
-    return;
-  }
-  
-  const containerRect = notesContainer.getBoundingClientRect();
-  const x = e.clientX - containerRect.left;
-  const y = e.clientY - containerRect.top;
-  textnotes.textContent = '';
-  createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
-});
+        // Prevent creating a note if the double-click is on text or inside a note
+        if (e.target.tagName === "TEXTAREA" || e.target.closest(".note")) {
+          return;
+        }
+
+        const containerRect = notesContainer.getBoundingClientRect();
+        const x = e.clientX - containerRect.left;
+        const y = e.clientY - containerRect.top;
+        textnotes.textContent = "";
+        createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
+      });
 
       // Clear all notes
       clearBtn.addEventListener("click", () => {
@@ -163,4 +173,7 @@
       });
     </script>
   </body>
+  <footer>
+    By John A. Bacho
+  </footer>
 </html>
