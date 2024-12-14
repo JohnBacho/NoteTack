@@ -144,12 +144,17 @@
 
       // Add a new note on double-click in the container
       notesContainer.addEventListener("dblclick", (e) => {
-        const containerRect = notesContainer.getBoundingClientRect();
-        const x = e.clientX - containerRect.left;
-        const y = e.clientY - containerRect.top;
-        textnotes.textContent = '';
-        createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
-      });
+  // Prevent creating a note if the double-click is on text or inside a note
+  if (e.target.tagName === "TEXTAREA" || e.target.closest(".note")) {
+    return;
+  }
+  
+  const containerRect = notesContainer.getBoundingClientRect();
+  const x = e.clientX - containerRect.left;
+  const y = e.clientY - containerRect.top;
+  textnotes.textContent = '';
+  createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
+});
 
       // Clear all notes
       clearBtn.addEventListener("click", () => {
