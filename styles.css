@@ -120,10 +120,9 @@ header {
 #text-in-notes-container {
   text-align: center;
   margin-top: 8%;
-  color: rgb(190, 190, 190);
+  color: rgba(190, 190, 190, 0.4);
   font-size: x-large;
   font-family: sans-serif;
-  opacity: 0.4;
   padding: 100px;
 }
 
