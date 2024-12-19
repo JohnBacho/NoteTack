@@ -51,6 +51,7 @@
       const notesContainer = document.getElementById("notes-container");
       const addNoteBtn = document.getElementById("add-note-btn");
       const clearBtn = document.getElementById("Clear");
+      const textnotes = document.getElementById("text-in-notes-container");
 
       // Loads saved notes from localStorage
       window.onload = () => {
@@ -58,6 +59,10 @@
         notes.forEach((note) =>
           createNoteElement(note.id, note.content, note.position, note.size)
         );
+
+        if (localStorage.getItem("textnotesCleared") === "true") {
+          textnotes.textContent = "";
+        }
       };
 
       // Save notes to localStorage
@@ -151,6 +156,8 @@
         const containerRect = notesContainer.getBoundingClientRect();
         const x = e.clientX - containerRect.left;
         const y = e.clientY - containerRect.top;
+        textnotes.textContent = "";
+        localStorage.setItem("textnotesCleared", "true");
         createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
       });
 
