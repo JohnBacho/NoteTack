@@ -52,19 +52,23 @@
       const addNoteBtn = document.getElementById("add-note-btn");
       const clearBtn = document.getElementById("Clear");
       const textnotes = document.getElementById("text-in-notes-container");
-
+  
+      let isPageLoading = true; // Flag to detect if the page is still loading
+    
       // Loads saved notes from localStorage
       window.onload = () => {
         const notes = JSON.parse(localStorage.getItem("stickyNotes")) || [];
         notes.forEach((note) =>
           createNoteElement(note.id, note.content, note.position, note.size)
         );
-
+    
         if (localStorage.getItem("textnotesCleared") === "true") {
           textnotes.textContent = "";
         }
+    
+        isPageLoading = false; // Mark that the page has finished loading
       };
-
+    
       // Save notes to localStorage
       function saveNotes() {
         const notes = [];
@@ -77,7 +81,7 @@
         });
         localStorage.setItem("stickyNotes", JSON.stringify(notes));
       }
-
+    
       // Create a new sticky note element
       function createNoteElement(
         id = Date.now(),
@@ -89,36 +93,41 @@
         note.dataset.id = id;
         note.style.top = position.top;
         note.style.left = position.left;
-
+    
         const dragArea = document.createElement("div");
         dragArea.classList.add("drag-area");
-
+    
         const textarea = document.createElement("textarea");
         textarea.value = content;
         textarea.addEventListener("input", saveNotes);
-
+    
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "×";
         deleteBtn.addEventListener("click", () => {
           note.remove();
           saveNotes();
         });
-
+    
         note.appendChild(dragArea);
         note.appendChild(textarea);
         note.appendChild(deleteBtn);
         notesContainer.appendChild(note);
-
+    
         enableDrag(note, dragArea);
-        textarea.focus();
+    
+        // Only focus the textarea if the page isn't in the loading state
+        if (!isPageLoading) {
+          textarea.focus();
+        }
+    
         saveNotes();
       }
-
+    
       // Enable dragging for a note from the drag area
       function enableDrag(note, dragArea) {
         let isDragging = false;
         let offsetX, offsetY;
-
+    
         dragArea.addEventListener("mousedown", (e) => {
           isDragging = true;
           offsetX = e.clientX - note.offsetLeft;
@@ -126,13 +135,13 @@
           dragArea.style.cursor = "grabbing";
           document.body.style.userSelect = "none"; // Prevent text selection while dragging
         });
-
+    
         document.addEventListener("mousemove", (e) => {
           if (!isDragging) return;
           note.style.left = `${e.clientX - offsetX}px`;
           note.style.top = `${e.clientY - offsetY}px`;
         });
-
+    
         document.addEventListener("mouseup", () => {
           if (isDragging) {
             isDragging = false;
@@ -142,17 +151,17 @@
           }
         });
       }
-
+    
       // Add a new note on button click
       addNoteBtn.addEventListener("click", () => createNoteElement());
-
+    
       // Add a new note on double-click in the container
       notesContainer.addEventListener("dblclick", (e) => {
         // Prevent creating a note if the double-click is on text or inside a note
         if (e.target.tagName === "TEXTAREA" || e.target.closest(".note")) {
           return;
         }
-
+    
         const containerRect = notesContainer.getBoundingClientRect();
         const x = e.clientX - containerRect.left;
         const y = e.clientY - containerRect.top;
@@ -160,13 +169,14 @@
         localStorage.setItem("textnotesCleared", "true");
         createNoteElement(Date.now(), "", { top: `${y}px`, left: `${x}px` });
       });
-
+    
       // Clear all notes
       clearBtn.addEventListener("click", () => {
         document.querySelectorAll(".note").forEach((note) => note.remove());
         localStorage.removeItem("stickyNotes");
       });
     </script>
+    
   </body>
   <footer>By John A. Bacho</footer>
 </html>
